@@ -3,9 +3,10 @@ Password manager stores password in a json
 Allows adding new password and retrieving existing passwords
 """
 
-from Operations import *
+from DB_Ops import *
 from time import sleep
 from sys import exit
+import pyperclip
 
 def returnToMenu() -> None:
     sleep(1)
@@ -26,18 +27,22 @@ def menu() -> None:
             print("Not a correct choice")
         else:
             break
-    file= "new.json"    # Name of JSON File
-    read_dict = read_file(file=file)
+    con = initial_setup()
     if choice == '1':
-        add_password(read_dict=read_dict, file=file)
+        account_name = input("Enter account name\n> ")
+        if add_password(con, account_name):
+            print("Password added")
+        else:
+            print("Password already exists for the given account name")
         returnToMenu()
     elif choice == '2':
-        password = get_password(read_dict=read_dict)
-        print(password)
+        account_name = input("Enter account name\n> ")
+        password = get_password(con, account_name)
+        pyperclip.copy(password)
+        print("Password copied to clipboard.\nNote: This tool will not remove the password from the clipboard after you exit.")
         returnToMenu()
     elif choice == '3':
         exit(0)
-
 
 if __name__ == '__main__':
     menu()
