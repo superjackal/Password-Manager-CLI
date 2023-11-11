@@ -29,11 +29,15 @@ def add_password(con:sqlite3.Connection, account_name:str) -> bool:
     else:
         return False
 
-def get_password(con:sqlite3.Connection, account_name:str) -> str:
+def get_password(con:sqlite3.Connection, account_name:str) -> str | None:
     cur = con.cursor()
     cur.execute("SELECT password from passwords WHERE account=?", (account_name, ))
-    return cur.fetchall()[0][0]
+    res = cur.fetchall()
     cur.close()
+    if res:
+        return res[0][0]
+    else:
+        return None
 
 
 if __name__ == '__main__':

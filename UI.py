@@ -38,8 +38,11 @@ def menu() -> None:
     elif choice == '2':
         account_name = input("Enter account name\n> ")
         password = get_password(con, account_name)
-        pyperclip.copy(password)
-        print("Password copied to clipboard.\nNote: This tool will not remove the password from the clipboard after you exit.")
+        if password:
+            pyperclip.copy(password)
+            print("Password copied to clipboard.\nNote: This tool will not remove the password from the clipboard after you exit.")
+        else:
+            print("Account not found")
         returnToMenu()
     elif choice == '3':
         exit(0)
