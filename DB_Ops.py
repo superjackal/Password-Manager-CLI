@@ -9,6 +9,7 @@ def initial_setup() -> sqlite3.Connection:
 def password_gen(l:int) -> str:
     from random import choice
     from string import ascii_letters, digits
+    all_chars = ascii_letters * 2 + digits * 2 + "!()-.?[]_`~;:!@#$%^&*+="
     return ''.join([choice(ascii_letters + digits + "!()-.?[]_`~;:!@#$%^&*+=") for _ in range(l)])
 
 def check_exists(con:sqlite3.Connection, account_name:str) -> bool:
@@ -39,8 +40,17 @@ def get_password(con:sqlite3.Connection, account_name:str) -> str | None:
     else:
         return None
 
+def get_accounts(con:sqlite3.Connection) -> list[str]:
+    cur = con.cursor()
+    cur.execute("SELECT account from passwords")
+    return [account for (account, ) in cur.fetchall()]
+
+def delete_account(con:sqlite3.Connection, account_name:str) -> None:
+    cur = con.cursor()
+    cur.execute("DELETE FROM passwords WHERE account=?", (account_name, ))
+    con.commit()
 
 if __name__ == '__main__':
     con = initial_setup()
-    check_exists(con, "Google")
+    delete_account(con, "linkedin\\")
     con.close()
