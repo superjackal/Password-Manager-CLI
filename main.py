@@ -1,5 +1,5 @@
 from argparse import ArgumentParser
-import pyperclip
+import subprocess
 from DB_Ops import *
 
 def main():
@@ -15,7 +15,7 @@ def main():
     if args.read:
         password = get_password(con, account_name=args.read)
         if password:
-            pyperclip.copy(password)
+            subprocess.run("clip", input=password, text=True)
             print("Password copied to clipboard.\nNote: This tool will not remove the password from the clipboard after you exit.")
         else:
             print("Account not found")
